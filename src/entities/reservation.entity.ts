@@ -1,5 +1,4 @@
-// reservation.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
 import { Availability } from './Availability';
 
 @Entity()
@@ -13,12 +12,13 @@ export class Reservation {
   @Column()
   guestEmail: string;
 
-  @Column()
+  @Column({ type: 'date' })
   checkIn: string;
 
-  @Column()
+  @Column({ type: 'date' })
   checkOut: string;
 
-  @ManyToOne(() => Availability, availability => availability.reservations)
-  availability: Availability;  // Asegúrate de que esta relación esté bien configurada
+  @ManyToMany(() => Availability)
+  @JoinTable()
+  availability: Availability[];
 }

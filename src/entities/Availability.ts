@@ -1,4 +1,3 @@
-// Availability.ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Reservation } from './reservation.entity';
 
@@ -8,11 +7,11 @@ export class Availability {
   id: number;
 
   @Column()
-  date: string;
+  date: Date;
 
   @Column()
   isAvailable: boolean;
 
   @OneToMany(() => Reservation, reservation => reservation.availability)
-  reservations: Reservation[];  // Asegúrate de que la relación esté configurada aquí también
+  reservations: Reservation[];
 }

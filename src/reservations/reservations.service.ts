@@ -16,9 +16,11 @@ export class ReservationsService {
 
   // Crear una nueva reserva
   async createReservation(guestName: string, guestEmail: string, checkIn: string, checkOut: string): Promise<Reservation> {
-    // Verificar que la fecha de check-in y check-out estén disponibles
-    const checkInAvailability = await this.availabilityRepository.findOne({ where: { date: checkIn, isAvailable: true } });
-    const checkOutAvailability = await this.availabilityRepository.findOne({ where: { date: checkOut, isAvailable: true } });
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+
+    const checkInAvailability = await this.availabilityRepository.findOne({ where: { date: checkInDate, isAvailable: true } });
+    const checkOutAvailability = await this.availabilityRepository.findOne({ where: { date: checkOutDate, isAvailable: true } });
 
     if (!checkInAvailability || !checkOutAvailability) {
       throw new Error('Una o ambas fechas no están disponibles');
@@ -29,7 +31,7 @@ export class ReservationsService {
       guestEmail,
       checkIn,
       checkOut,
-      availability: checkInAvailability, // Asociar disponibilidad
+      availability: [checkInAvailability, checkOutAvailability], // Ahora es un array
     });
 
     return await this.reservationsRepository.save(newReservation);
